@@ -9,8 +9,6 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    @yield('style')
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <title>@yield('title','unknown page')</title>
     <nav class="navbar navbar-expand-lg bg-body-tertiary ">
         <div class="container-fluid">
@@ -20,53 +18,47 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" href="{{route("dashboard.index")}}">Dashboard</a>
-              </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{route("posts.index")}}">All posts</a>
-                </li>
-            </ul>
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                  <span class="navbar-toggler-icon"></span>
-              </button>
-              {{-- @guest
-                  @if (Route::has('login'))
-                      <li class="nav-item">
-                          <a class="nav-link" href="{{ route('login-form') }}">{{ __('Login') }}</a>
-                      </li>
+                @if(Route::has('login'))
+                    @auth
+                @if(Auth::user()->is_admin==1)
+                  <li class="nav-item">
+                  <a class="nav-link" href="{{route("dashboard.index")}}">Dashboard</a>
+                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route("posts.index")}}">All posts</a>
+                    </li>
+                    </ul>
+               @else
+                   <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route("posts.index")}}">My posts</a>
+                    </li>
+                   </ul>
+              @endif
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left: 700px">
+
+                    <li class="nav-item">
+                        <a href="" class="nav-link">{{Auth::user()->name}}</a>
+                    </li>
+                     <li class="nav-item">
+                         <form method="POST" action="{{ route('logout') }}">
+                             @csrf
+
+                             <button class="nav-link">logout</button>
+
+                         </form>
+                     </li>
+                      @endauth
                   @endif
+              </ul>
 
-                  @if (Route::has('register'))
-                      <li class="nav-item">
-                          <a class="nav-link" href="{{ route('register-form') }}">{{ __('Register') }}</a>
-                      </li>
-                  @endif
-              @else
-                  <li class="nav-item dropdown">
-                      <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                          {{ Auth::user()->name }}
-                      </a>
-
-                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href=""
-                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                              {{ __('Logout') }}
-                          </a>
-
-                          <form id="logout-form" action="" method="POST" class="d-none">
-                              @csrf
-                          </form>
-                      </div>
-                  </li>
-              @endguest --}}
             <form class="d-flex"  action="{{route("dashboard.search")}}" method="post">
                 @csrf
               <input class="form-control me-2" name="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
           </div>
+
         </div>
       </nav>
 </head>

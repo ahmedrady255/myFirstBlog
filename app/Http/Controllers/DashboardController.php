@@ -11,7 +11,8 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
         $postsFromDB=Post::all();
         return view('Dashboard.index',['posts'=>$postsFromDB]);
     }
-    public function show(Post $post /*route model binding*/){
+    public function show($id /*route model binding*/){
+        $post=Post::where('id',$id)->first();
         return view('Dashboard.show',["s_post"=>$post]);}
 
     public function create(){
@@ -25,29 +26,22 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
 
         request()->validate([
             'title'=>['required','min:3'],
-            'discreption'=>['required','min:5'],
+            'description'=>['required','min:5'],
             'post_creator'=> ['required','exists:users,id'],
             'post_image'=> ['required','image','mimes:jpeg,png,jpg,gif,svg']
         ]);
         //  second one is to collect single data
         $title=request()->title;
-        $discreption=request()->discreption;
+        $description=request()->description;
         $postCreator = request()->post_creator;
         $postImage = request()->post_image;
         $NewImageName=time().'_'.request()->title.'.'.$postImage->Extension();
         $post_content=request()->post_content;
         request()->post_image->move(public_path('images'),$NewImageName);
         //FOR DEBUGING //dd($data);
-
-        // 2- store the data in the database
-        /*  $post=new Post;
-          $post->title = $title;
-          $post->discription = $discreption;
-          $post->created_by = $auother;
-          $post->save();*/
         Post::create([
             'title'=>$title,
-            'discription'=>$discreption,
+            'description'=>$description,
             'user_id'=> $postCreator,
             'post_image'=>$NewImageName,
             'content'=>$post_content
@@ -68,14 +62,14 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
     public function update($postid) {
 
         $title=request()->title;
-        $discreption=request()->discreption;
+        $description=request()->description;
         $postCreator = request()->post_creator;
         $postImage = request()->post_image;
         $post_content=request()->post_content;
         //INPUT VALIDATING
         request()->validate([
             'title'=>['required','min:3'],
-            'discreption'=>['required','min:5'],
+            'description'=>['required','min:5'],
             'post_creator'=> ['required','exists:users,id'],
             'post_image'=> ['image','mimes:jpeg,png,jpg,gif,svg']
         ]);
@@ -101,7 +95,7 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
             // Update the database with the new image name
             $singlePostfromDB->update([
                 'title' => $title,
-                'discription' => $discreption,
+                'description' => $description,
                 'post_image' => $NewUpdatedImageName,
                 'user_id' => $postCreator,
                 'content' => $post_content
@@ -110,7 +104,7 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
             // Update the database without changing the image
             $singlePostfromDB->update([
                 'title' => $title,
-                'discription' => $discreption,
+                'description' => $description,
                 'user_id' => $postCreator,
                 'content' => $post_content
             ]);
@@ -120,12 +114,16 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
     }
     public function destroy($postid) {
         $postfromDB=Post::find($postid);
+        $im_path = public_path('images/' . $postfromDB->image);
+        if (file_exists($im_path)) {
+            unlink($im_path);
+        }
         $postfromDB->delete();
         return to_route("dashboard.index");
     }
     public function search(Request $request){
         $search = $request->search;
-        $results=Post::where('title',$search)->orwhere('discription','like',$search)->get();
+        $results=Post::where('title',$search)->orwhere('description','like',$search)->get();
         return view('dashboard.search',['results'=>$results] );
     }
 

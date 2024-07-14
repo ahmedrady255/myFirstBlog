@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
-protected $fillable=[
-'title', 'discription', 'user_id' , 'post_image','content'
+
+    /**
+     * @var mixed|string
+     */
+    protected $fillable=[
+'title', 'description', 'user_id' , 'post_image','content'
 ];
 
 public function user()

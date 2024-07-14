@@ -19,11 +19,11 @@
 
         <div class="form-floating">
             Discreption :
-            <textarea class="form-control"  name="discreption" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">{{$post->discription}}</textarea>
+            <textarea class="form-control"  name="description" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">{{$post->description}}</textarea>
         </div>
             <div class="form-floating">
                 Content :
-                <textarea class="form-control"  name="post_content" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">{{old('discreption')}}</textarea>
+                <textarea class="form-control"  name="post_content" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">{{$post->content}}</textarea>
             </div>
             Upload photo:
             <div class="input-group mb-3">
