@@ -18,8 +18,8 @@
         <input class="form-control" name="title"  type="text" value="{{$post->title}}" aria-label="default input example">
 
         <div class="form-floating">
-            Discreption :
-            <textarea class="form-control"  name="discreption" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">{{$post->description}}</textarea>
+            Description :
+            <textarea class="form-control"  name="description" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">{{$post->description}}</textarea>
         </div>
             <div class="form-floating">
                 Content :
@@ -30,6 +30,8 @@
                 <input type="file" class="form-control" name="post_image" value="{{$post->post_image}}" id="inputGroupFile02">
 
             </div>
+            Video URL:
+            <input class="form-control" name="video_url" value="{{old('video_url')}}" type="text">
 
         <input class="btn btn-primary mt-2" type="submit" value="Edit post">
      </div>

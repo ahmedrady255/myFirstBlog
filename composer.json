@@ -63,5 +63,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+
+    "autoloader": {
+        "files" : [
+            "app/Helpers/videoHelper.php"
+        ]
+    }
 }

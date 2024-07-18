@@ -11,7 +11,7 @@ class Post extends Model
      * @var mixed|string
      */
     protected $fillable = [
-        'title', 'description', 'user_id', 'post_image', 'content'
+        'title', 'description', 'user_id', 'post_image', 'content','video_url'
     ];
 
     public function user()

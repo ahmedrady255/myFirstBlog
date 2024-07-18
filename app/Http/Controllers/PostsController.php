@@ -26,7 +26,8 @@ class PostsController extends Controller
         request()->validate([
             'title'=>['required','min:3'],
             'description'=>['required','min:5'],
-            'post_image'=> ['required','image','mimes:jpeg,png,jpg,gif,svg']
+            'post_image'=> ['required','image','mimes:jpeg,png,jpg,gif,svg'],
+            'video_url'=> ['url'],
         ]);
         $NewImageName=time().'_'.request()->title.'.'.Request()->post_image->Extension();
         request()->post_image->move(public_path('images'),$NewImageName);
@@ -36,6 +37,7 @@ class PostsController extends Controller
         $newPost->user_id=Auth::user()->id;
         $newPost->post_image=$NewImageName;
         $newPost->content=Request()->post_content;
+        $newPost->video_url=Request()->video_url;
         $newPost->save();
         return to_route('posts.index');
     }
@@ -48,11 +50,13 @@ class PostsController extends Controller
         $description=request()->description;
         $postImage = request()->post_image;
         $post_content=request()->post_content;
+        $video_url=request()->video_url;
         //INPUT VALIDATING
         request()->validate([
             'title'=>['required','min:3'],
             'description'=>['required','min:5'],
-            'post_image'=> ['image','mimes:jpeg,png,jpg,gif,svg']
+            'post_image'=> ['image','mimes:jpeg,png,jpg,gif,svg'],
+            'video_url'=> ['url'],
         ]);
 
         $singlePostfromDB= Post::find($id);
@@ -78,18 +82,20 @@ class PostsController extends Controller
                 'title' => $title,
                 'description' => $description,
                 'post_image' => $NewUpdatedImageName,
-                'content' => $post_content
+                'content' => $post_content,
+                'video_url' => $video_url,
             ]);
         } else {
             // Update the database without changing the image
             $singlePostfromDB->update([
                 'title' => $title,
                 'description' => $description,
-                'content' => $post_content
+                'content' => $post_content,
+                'video_url' => $video_url,
             ]);
         }
         // 3- redirection to index page
-        return to_route("Posts.show",$id);
+        return to_route("post.show",$id);
     }
     public function destroy($id) {
         $postfromDB=Post::find($id);

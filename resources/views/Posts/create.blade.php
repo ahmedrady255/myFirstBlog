@@ -28,6 +28,10 @@
                 <input type="file" class="form-control" name="post_image" value="{{ old('post_image') }}">
                 <label class="input-group-text">Upload</label>
             </div>
+
+                Video URL:
+                <input class="form-control" name="video_url" type="text">
+
             <input class="btn btn-primary mt-2" type="submit" value="Submit">
         </div>
     </form>

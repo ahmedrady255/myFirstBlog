@@ -18,7 +18,7 @@
         <input class="form-control" name="title"  type="text" value="{{$post->title}}" aria-label="default input example">
 
         <div class="form-floating">
-            Discreption :
+            Description :
             <textarea class="form-control"  name="description" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px">{{$post->description}}</textarea>
         </div>
             <div class="form-floating">
@@ -30,6 +30,8 @@
                 <input type="file" class="form-control" name="post_image" value="{{$post->post_image}}" id="inputGroupFile02">
 
             </div>
+            Video URL:
+            <input class="form-control" name="video_url" value="{{$post->video_url}}" type="text">
         <div class="mb-3">
             <label class="form-check-label">Post creator:</label>
             <select name="post_creator" class="form-control">

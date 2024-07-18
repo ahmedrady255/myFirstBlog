@@ -12,7 +12,7 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
         return view('Dashboard.index',['posts'=>$postsFromDB]);
     }
     public function show($id /*route model binding*/){
-        $post=Post::where('id',$id)->first();
+        $post=Post::where('id',$id)->first()->load('comments');
         return view('Dashboard.show',["s_post"=>$post]);}
 
     public function create(){
@@ -28,13 +28,15 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
             'title'=>['required','min:3'],
             'description'=>['required','min:5'],
             'post_creator'=> ['required','exists:users,id'],
-            'post_image'=> ['required','image','mimes:jpeg,png,jpg,gif,svg']
+            'post_image'=> ['required','image','mimes:jpeg,png,jpg,gif,svg'],
+            'video_url'=> ['url'],
         ]);
         //  second one is to collect single data
         $title=request()->title;
         $description=request()->description;
         $postCreator = request()->post_creator;
         $postImage = request()->post_image;
+        $postVideo = request()->video_url;
         $NewImageName=time().'_'.request()->title.'.'.$postImage->Extension();
         $post_content=request()->post_content;
         request()->post_image->move(public_path('images'),$NewImageName);
@@ -44,7 +46,8 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
             'description'=>$description,
             'user_id'=> $postCreator,
             'post_image'=>$NewImageName,
-            'content'=>$post_content
+            'content'=>$post_content,
+            'video_url'=>$postVideo,
             //put to use this method we need to define $fillable in model file
         ]);
 
@@ -60,19 +63,23 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
 
     }
     public function update($postid) {
+//INPUT VALIDATING
+        request()->validate([
+            'title'=>['required','min:3'],
+            'description'=>['required','min:5'],
+            'post_creator'=> ['required','exists:users,id'],
+            'post_image'=> ['image','mimes:jpeg,png,jpg,gif,svg'],
+            'video_url'=> ['url'],
+        ]);
 
         $title=request()->title;
         $description=request()->description;
         $postCreator = request()->post_creator;
         $postImage = request()->post_image;
         $post_content=request()->post_content;
-        //INPUT VALIDATING
-        request()->validate([
-            'title'=>['required','min:3'],
-            'description'=>['required','min:5'],
-            'post_creator'=> ['required','exists:users,id'],
-            'post_image'=> ['image','mimes:jpeg,png,jpg,gif,svg']
-        ]);
+        $video_url=request()->video_url;
+
+
 
         $singlePostfromDB= Post::find($postid);
 
@@ -98,7 +105,8 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
                 'description' => $description,
                 'post_image' => $NewUpdatedImageName,
                 'user_id' => $postCreator,
-                'content' => $post_content
+                'content' => $post_content,
+                'video_url' => $video_url,
             ]);
         } else {
             // Update the database without changing the image
@@ -106,7 +114,8 @@ Class Dashboardcontroller extends Controller{ //Dashboard controller
                 'title' => $title,
                 'description' => $description,
                 'user_id' => $postCreator,
-                'content' => $post_content
+                'content' => $post_content,
+                'video_url' => $video_url,
             ]);
         }
         // 3- redirection to index page

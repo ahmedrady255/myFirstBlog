@@ -29,6 +29,8 @@
                 <input type="file" class="form-control" name="post_image" id="inputGroupFile02" value="{{old('post_image')}}">
                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
             </div>
+            Video URL:
+            <input class="form-control" name="video_url" type="text">
 
             <div class="mb-3">
             <label class="form-check-label">Post creator:</label>

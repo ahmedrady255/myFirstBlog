@@ -4,12 +4,38 @@
 @section("content")
     <div class="container mt-4">
         <div class="card mb-3">
-            <img src="{{asset('images/'.$post->post_image)}}" class="card-img-top" alt="..."style="max-width: fit-content;max-height: fit-content;margin-left:40%">
+            <div class="btn-group">
+                <button style="width:10px;height: 10px ;margin-left:97.6%;" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{route('post.edit',$post->id)}}">Edit post</a></li>
+                    <li>
+                        <form method="POST" action="{{route('post.delete',$post->id)}}" enctype="multipart/form-data">
+                            @csrf
+                            @method('delete')
+                            <button class="dropdown-item">Delete</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <img src="{{ asset('images/' . $post->post_image) }}" class="card-img-top" alt="..." style="max-width: fit-content;max-height: fit-content;margin-left:40%">
             <div class="card-body">
-                <h5 class="card-title"><big>{{$post->title}}</big></h5>
-                <p class="card-text">{{$post->description}}.</p>
-                <p class="card-text">{{$post->content}}.</p>
-                <p class="card-text"><small class="text-body-secondary">Last updated at {{$post->updated_at}} , Created by :{{$post->user ? $post->user->name :'not found'}} ,Email : {{$post->user ? $post->user->email:'not found'}},Created at : {{$post->created_at}} </small></p>
+                <h5 class="card-title"><big>{{ $post->title }}</big></h5>
+                <p class="card-text">{{ $post->description }}.</p>
+                <p class="card-text">{{ $post->content }}.</p>
+                @if ($post->video_url)
+                    @php
+                        $videoId = App\Helpers\videoHelper::getVideoId($post->video_url);
+                    @endphp
+                    @if ($videoId)
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    @else
+                        <p>Invalid YouTube URL</p>
+                    @endif
+                @endif
+                <p class="card-text"><small class="text-body-secondary">Last updated at {{ $post->updated_at }}, Created by: {{ $post->user ? $post->user->name : 'not found' }}, Email: {{ $post->user ? $post->user->email : 'not found' }}, Created at: {{ $post->created_at }}</small></p>
             </div>
         </div>
         <div class="comments-container">
@@ -20,15 +46,13 @@
                         <div style="border-radius: 10px" class="card-body">
                             <p>{{ $comment->comment }}</p>
                             <small class="text-muted">by {{ $comment->user->name }} on {{ $comment->created_at }}</small>
-                            <!-- Edit and Delete buttons for comments -->
                             @if(auth()->user()->id === $comment->user_id)
                                 <div class="btn-group" style="float: right;margin-top: -50px;">
-                                    <button style="width:10px;height: 10px ;" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
-                                    </button>
+                                    <button style="width:10px;height: 10px;" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false"></button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" onclick="" href="">Edit comment</a></li>
+                                        <li><a class="dropdown-item" href="#">Edit comment</a></li>
                                         <li>
-                                            <form method="POST" action="" enctype="multipart/form-data">
+                                            <form method="POST" action="#" enctype="multipart/form-data">
                                                 @csrf
                                                 @method('delete')
                                                 <button class="dropdown-item">Delete</button>
@@ -60,5 +84,4 @@
             @endguest
         </div>
     </div>
-
 @endsection
