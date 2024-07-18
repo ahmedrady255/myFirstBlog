@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Post;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PostsController extends Controller
@@ -13,6 +14,7 @@ class PostsController extends Controller
         return view('Posts.index', ['posts' => $allPosts]);
     }
     public function show(Post $post /*route model binding*/){
+        $post->load('comments');
         return view('Posts.show',["post"=>$post]);}
     public function create()
     {
@@ -97,6 +99,11 @@ class PostsController extends Controller
         }
         $postfromDB->delete();
         return to_route("dashboard.index");
+    }
+    public function search(Request $request){
+        $search = $request->search;
+        $results=Post::where('title',$search)->orwhere('description','like',$search)->get();
+        return view('Posts.search',['results'=>$results] );
     }
 
 }

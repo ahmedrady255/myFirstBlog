@@ -12,7 +12,7 @@
     <title>@yield('title','unknown page')</title>
     <nav class="navbar navbar-expand-lg bg-body-tertiary ">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{{route('home.index')}}">Blog-test</a>
+          <a class="navbar-brand" href="{{route('home.index')}}">My Blog</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -25,7 +25,7 @@
                   <a class="nav-link" href="{{route("dashboard.index")}}">Dashboard</a>
                      </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route("posts.index")}}">All posts</a>
+                        <a class="nav-link" href="{{route("posts.index")}}">My posts</a>
                     </li>
                     </ul>
                @else
@@ -35,7 +35,7 @@
                     </li>
                    </ul>
               @endif
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left: 700px">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left:850px">
 
                     <li class="nav-item">
                         <a href="" class="nav-link">{{Auth::user()->name}}</a>
@@ -48,18 +48,30 @@
 
                          </form>
                      </li>
-                      @endauth
+                  @if(Auth::user()->is_admin==1)
+                  <form class="d-flex"  action="{{route("dashboard.search")}}" method="post">
+                      @csrf
+                      <input class="form-control me-2" name="search" placeholder="Search" aria-label="Search">
+                      <button class="btn btn-outline-success" type="submit">Search</button>
+                  </form>
+                  @elseif(Auth::user()->is_admin!=1)
+                      <form class="d-flex"  action="{{route("posts.search")}}" method="post">
+                      @csrf
+                      <input class="form-control me-2" name="search" placeholder="Search" value="{{old('search')}}" aria-label="Search">
+                      <button class="btn btn-outline-success" type="submit">Search</button>
+                  </form>
+                  @endauth
+                  @else
+                      <form style="margin-left: 1100px" class="d-flex"  action="{{route("posts.search")}}" method="post">
+                          @csrf
+                          <input class="form-control me-2" name="search" placeholder="Search" aria-label="Search">
+                          <button class="btn btn-outline-success" type="submit">Search</button>
+                      </form>
+                  @endif
                   @endif
               </ul>
-
-            <form class="d-flex"  action="{{route("dashboard.search")}}" method="post">
-                @csrf
-              <input class="form-control me-2" name="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+              </div>
           </div>
-
-        </div>
       </nav>
 </head>
 <body >           {{-- content start --}}
